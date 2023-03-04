@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Yonnie's Image to HTML/CSS ASCII art converter</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+    <h1>Upload an image to convert it to ASCII</h1>
+    <form action="./php/image-upload.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+        <input type="file" name="image">
+        <select name="conversion_type">
+            <option value="4px_single">4px - Single Character</option>
+            <option value="8px_single">8px - Single Character</option>
+            <option value="4px_multiple">4px - Multiple Characters</option>
+            <option value="8px_multiple">8px - Multiple Characters</option>
+        </select>
+        <input type="submit" value="Convert">
+    </form>
+    <script src="./assets/js/validate.js"></script>
+</body>
+
+</html>

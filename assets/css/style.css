@@ -1,0 +1,70 @@
+body {
+    background-color: black;
+    }
+    
+    h1 {
+    text-align: center;
+    color: white;
+    font-size: 36px;
+    margin-top: 50px;
+    }
+    
+    form {
+    width: 50%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #888888;
+    text-align: center;
+    }
+    
+    input[type="file"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    }
+    
+    input[type="submit"] {
+    background-color: grey;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 20px;
+    }
+    
+    input[type="submit"]:hover {
+    background-color: black;
+    }
+    
+    select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 20px;
+    }
+
+    p { 
+        color: white; 
+    }
+
+    .img-wrapper pre{
+        line-height: 5px;
+        letter-spacing: 2.75px;
+    }
+
+    .img-wrapper8px pre {
+        line-height: 7px;
+        letter-spacing: 3px;
+    }
