@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Geduld's Image to HTML/CSS ASCII art converter</title>
+    <title>Yonnie's Image to HTML/CSS ASCII art converter</title>
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
