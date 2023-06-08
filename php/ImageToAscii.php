@@ -69,9 +69,8 @@ class ImageToAscii
       echo 'line-height: 7px; letter-spacing: 3px;';
     } else {
       echo 'line-height: 5px; letter-spacing: 2.75px;';
-    }
-    
-    echo '--fs: 9px;">';
+    } 
+    echo '">';
   }
 
   protected function closeImage()
