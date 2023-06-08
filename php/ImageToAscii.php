@@ -36,7 +36,6 @@ class ImageToAscii
 
     imagecopyresampled($img, $this->img, 0, 0, 0, 0, $newWidth, $newHeight, $this->width, $this->height);
 
-    // If the representation isn't accurate change the number here to apply a filter.
     imagefilter($img, IMG_FILTER_CONTRAST, 10);
     $width = imagesx($img);
     $height = imagesy($img);
@@ -64,7 +63,15 @@ class ImageToAscii
   protected function displayImage(int $fontSize, string $className)
   {
     echo '<div class="img-wrapper' . $className . '" style="display: flex; justify-content: center; align-items: center; background-color: #000000;">';
-    echo '<pre style="font-size: ' . $fontSize . 'px;font-weight: bold;padding: 0px ' . $fontSize . 'px;--fs: 9px;">';
+    echo '<pre style="font-size: ' . $fontSize . 'px;font-weight: bold;padding: 0px ' . $fontSize . 'px;';
+    
+    if ($className === "8px") {
+      echo 'line-height: 7px; letter-spacing: 3px;';
+    } else {
+      echo 'line-height: 5px; letter-spacing: 2.75px;';
+    }
+    
+    echo '--fs: 9px;">';
   }
 
   protected function closeImage()
