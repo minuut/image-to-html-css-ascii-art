@@ -58,13 +58,3 @@ body {
     p { 
         color: white; 
     }
-
-    .img-wrapper pre{
-        line-height: 5px;
-        letter-spacing: 2.75px;
-    }
-
-    .img-wrapper8px pre {
-        line-height: 7px;
-        letter-spacing: 3px;
-    }
