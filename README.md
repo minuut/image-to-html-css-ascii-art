@@ -1,7 +1,6 @@
 <h1> Yonnie's Image to HTML/CSS ASCII art converter </h1>
 <h2> Converts Images with the .PNG and .JPG extension to HTML/CSS ASCII Art</h2>
 
-![banner](https://github.com/geduld/image-to-html-css-ASCII-art/blob/main/assets/images/bannergeduld.png?raw=true)
 <br>
 
 <pre>
