@@ -1,132 +1,176 @@
 <?php
 
 /**
- * Class to convert images to ASCII.
+ * Class ImageToAscii
+ *
+ * A class for converting images into an ASCII representation.
+ * Made by github.com/minuut (Yonnie)
  */
 class ImageToAscii
 {
-  private $img;
+  private $image;
   private $width;
   private $height;
 
   /**
    * ImageToAscii constructor.
-   * @param string $imagePath - Path of the image to be converted.
-   * @throws \Exception
+   *
+   * @param string $imagePath Path to the image file.
    */
   public function __construct(string $imagePath)
+  {
+    $this->loadImage($imagePath);
+    $this->width = imagesx($this->image);
+    $this->height = imagesy($this->image);
+  }
+
+  /**
+   * Loads the image from the given path.
+   *
+   * @param string $imagePath Path to the image file.
+   * @throws \Exception
+   */
+  private function loadImage(string $imagePath): void
   {
     $type = exif_imagetype($imagePath);
     switch ($type) {
       case IMAGETYPE_PNG:
-        $this->img = imagecreatefrompng($imagePath);
+        $this->image = imagecreatefrompng($imagePath);
         break;
       case IMAGETYPE_JPEG:
-        $this->img = imagecreatefromjpeg($imagePath);
+        $this->image = imagecreatefromjpeg($imagePath);
         break;
       default:
         throw new \Exception('Invalid image type');
     }
-    $this->width = imagesx($this->img);
-    $this->height = imagesy($this->img);
   }
 
   /**
-   * Converts the image to ASCII.
-   * @param int $newWidth - Width for the converted image.
-   * @param string $characters - Characters for the ASCII representation.
+   * Resizes the loaded image to a specified width while maintaining aspect ratio.
+   *
+   * @param int $newWidth New width for the resized image.
+   * @return \GdImage The resized image resource.
    * @throws \Exception
    */
-  protected function convertImage(int $newWidth, string $characters)
+  private function resizeImage(int $newWidth): \GdImage
   {
     $aspectRatio = $this->height / $this->width;
     $newHeight = $newWidth * $aspectRatio;
-    $img = imagecreatetruecolor($newWidth, $newHeight);
+    $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
 
-    if (!$img) {
+    if (!$resizedImage) {
       throw new \Exception('Error creating image');
     }
 
-    imagecopyresampled($img, $this->img, 0, 0, 0, 0, $newWidth, $newHeight, $this->width, $this->height);
+    imagecopyresampled($resizedImage, $this->image, 0, 0, 0, 0, $newWidth, $newHeight, $this->width, $this->height);
+    imagefilter($resizedImage, IMG_FILTER_CONTRAST, 10);
 
+    return $resizedImage;
+  }
 
-    imagefilter($img, IMG_FILTER_CONTRAST, 10);
-    $width = imagesx($img);
-    $height = imagesy($img);
+  /**
+   * Converts the resized image to its ASCII representation.
+   *
+   * @param \GdImage $resizedImage The resized image resource.
+   * @param string $characters Set of characters to use for the ASCII conversion.
+   */
+  private function convertToAscii(\GdImage $resizedImage, string $characters): void
+  {
+    $width = imagesx($resizedImage);
+    $height = imagesy($resizedImage);
+
     for ($h = 0; $h < $height; $h++) {
       for ($w = 0; $w < $width; $w++) {
-        // Get color at pixel location.
-        $rgb = ImageColorAt($img, $w, $h);
-        // Convert color into usable format.
-        $r = ($rgb >> 16) & 0xFF;
-        $g = ($rgb >> 8) & 0xFF;
-        $b = $rgb & 0xFF;
-        // Convert RGB to Hex
-        $hex = "#" . str_pad(dechex($r), 2, "0", STR_PAD_LEFT) .  str_pad(dechex($g), 2, "0", STR_PAD_LEFT) . str_pad(dechex($b), 2, "0", STR_PAD_LEFT);
-        // Check for white/off-white color.
-        if (($r > 240 && $g > 240 && $b > 240)) {
-          echo '&nbsp;';
-        } else {
-          echo '<span style="color:' . $hex . ';">' . $characters[rand(0, strlen($characters) - 1)] . '</span>';
-        }
+        $this->printPixelAsAscii($resizedImage, $w, $h, $characters);
       }
       echo "\n";
     }
   }
 
   /**
-   * Displays the starting div and pre tags for ASCII output.
-   * @param int $fontSize - Font size for the display.
-   * @param string $className - CSS class name for the wrapper.
+   * Prints a pixel from the resized image as an ASCII character.
+   *
+   * @param \GdImage $resizedImage The resized image resource.
+   * @param int $w X-coordinate of the pixel.
+   * @param int $h Y-coordinate of the pixel.
+   * @param string $characters Set of characters to use for the ASCII conversion.
    */
-  protected function displayImage(int $fontSize, string $className)
+  private function printPixelAsAscii(\GdImage $resizedImage, int $w, int $h, string $characters): void
   {
-    echo '<div class="img-wrapper' . $className . '" style="display: flex; justify-content: center; align-items: center; background-color: #000000;">';
-    echo '<pre style="font-size: ' . $fontSize . 'px;font-weight: bold;padding: 0px 0px;';
+    $rgb = ImageColorAt($resizedImage, $w, $h);
+    $r = ($rgb >> 16) & 0xFF;
+    $g = ($rgb >> 8) & 0xFF;
+    $b = $rgb & 0xFF;
 
-    if ($className === "8px") {
-      echo 'line-height: 7px; letter-spacing: 3px;';
+    if ($r > 240 && $g > 240 && $b > 240) {
+      echo '&nbsp;';
     } else {
-      echo 'line-height: 5px; letter-spacing: 2.75px;';
+      $hex = sprintf("#%02x%02x%02x", $r, $g, $b);
+      echo '<span style="color:' . $hex . ';">' . $characters[rand(0, strlen($characters) - 1)] . '</span>';
     }
-    echo '">';
   }
 
   /**
-   * Closes the ASCII display.
+   * Displays the header for the ASCII representation.
+   *
+   * @param int $fontSize Font size for the ASCII representation.
+   * @param string $className CSS class name for the display.
    */
-  protected function closeImage()
+  private function displayImageHeader(int $fontSize, string $className): void
   {
-    echo '</pre>';
-    echo '</div>';
+    $styles = 'line-height: 5px; letter-spacing: 2.75px;';
+    if ($className === "8px") {
+      $styles = 'line-height: 7px; letter-spacing: 3px;';
+    }
+    echo "<div class=\"img-wrapper{$className}\" style=\"display: flex; justify-content: center; align-items: center; background-color: #000000;\">";
+    echo "<pre style=\"font-size: {$fontSize}px;font-weight: bold;padding: 0px 0px;{$styles}\">";
   }
 
-  public function convert4pxSingleCharacter(string $characters = "y", int $fontSize = 4, string $className = "")
+  /**
+   * Closes the ASCII representation display.
+   */
+  private function displayImageFooter(): void
   {
-    $this->displayImage($fontSize, $className);
-    $this->convertImage(150, $characters);
-    $this->closeImage();
+    echo '</pre></div>';
   }
 
-  public function convert8pxSingleCharacter(string $characters = "y", int $fontSize = 8, string $className = "8px")
+  /**
+   * Converts the loaded image to ASCII using specified parameters.
+   *
+   * @param string $characters Set of characters to use for the ASCII conversion.
+   * @param int $fontSize Font size for the ASCII representation.
+   * @param string $className CSS class name for the display.
+   * @param int $newWidth New width for the resized image.
+   */
+  private function convertImageToAscii(string $characters, int $fontSize, string $className, int $newWidth): void
   {
-    $this->displayImage($fontSize, $className);
-    $this->convertImage(100, $characters);
-    $this->closeImage();
+    $this->displayImageHeader($fontSize, $className);
+    $resizedImage = $this->resizeImage($newWidth);
+    $this->convertToAscii($resizedImage, $characters);
+    $this->displayImageFooter();
   }
 
-  public function convert4pxWithMultipleCharacters(string $characters = "musti", int $fontSize = 4, string $className = "")
+
+ // Usage:
+  
+  public function convert4pxSingleCharacter(string $characters = "y", int $fontSize = 4, string $className = ""): void
   {
-    $this->displayImage($fontSize, $className);
-    $this->convertImage(150, $characters);
-    $this->closeImage();
+    $this->convertImageToAscii($characters, $fontSize, $className, 150);
   }
 
-  public function convert8pxWithMultipleCharacters(string $characters = "musti", int $fontSize = 8, string $className = "8px")
+  public function convert8pxSingleCharacter(string $characters = "y", int $fontSize = 8, string $className = "8px"): void
   {
-    $this->displayImage($fontSize, $className);
-    $this->convertImage(100, $characters);
-    $this->closeImage();
+    $this->convertImageToAscii($characters, $fontSize, $className, 100);
+  }
+
+  public function convert4pxWithMultipleCharacters(string $characters = "musti", int $fontSize = 4, string $className = ""): void
+  {
+    $this->convertImageToAscii($characters, $fontSize, $className, 150);
+  }
+
+  public function convert8pxWithMultipleCharacters(string $characters = "musti", int $fontSize = 8, string $className = "8px"): void
+  {
+    $this->convertImageToAscii($characters, $fontSize, $className, 100);
   }
 }
 
