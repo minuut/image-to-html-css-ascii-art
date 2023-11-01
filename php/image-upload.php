@@ -16,9 +16,6 @@ try {
         if (!in_array($_FILES['image']['type'], $validTypes)) {
             throw new Exception("Error: Please upload a valid image file.");
         }
-        if ($_FILES['image']['size'] > 500000) {
-            throw new Exception("Error: File size is too large. Please upload a file under 500KB.");
-        }
 
         $imageToAscii = new ImageToAscii($_FILES['image']['tmp_name']);
 
