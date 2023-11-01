@@ -6,7 +6,7 @@ Convert images into ASCII art using PHP.
 - **Formats**: Supports JPEG and PNG.
 - **Sizes**: 4px and 8px ASCII representations. 
 - **Characters**: Options for single or multiple character conversion. 
-- If you want different letters or fontsizes, you can change it in the code.
+- If you want different characters or fontsizes, you can change it in the code.
 
 ## Installation
 1. `git clone https://github.com/minuut/image-to-html-css-ascii-art.git`
