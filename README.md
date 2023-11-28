@@ -1,4 +1,4 @@
-# Yonnie's Image to ASCII Converter
+# Image to ASCII Converter
 
 Convert images into ASCII art using PHP.
 
