@@ -2,6 +2,9 @@
 
 Convert images into ASCII art using PHP.
 
+## Important
+This tool is intended for local use only. I created it to generate web pages containing an image made of pure HTML and CSS in a specific way. 
+
 ## Features
 - **Formats**: Supports JPEG and PNG.
 - **Sizes**: 4px and 8px ASCII representations. 
@@ -19,9 +22,6 @@ Convert images into ASCII art using PHP.
 3. Choose the conversion type.
 4. View the ASCII art.
 5. Use the "Return" button to navigate back.
-
-## Important Note
-This tool is designed for local usage only. 
 
 <br>
 before.jpg after conversion:
