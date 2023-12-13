@@ -20,6 +20,9 @@ Convert images into ASCII art using PHP.
 4. View the ASCII art.
 5. Use the "Return" button to navigate back.
 
+## Important Note
+This tool is designed for local usage only. 
+
 <br>
 before.jpg after conversion:
 
