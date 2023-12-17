@@ -4,7 +4,7 @@
  * Class ImageToAscii
  *
  * A class for converting images into an ASCII representation.
- * Made by github.com/minuut (Yonnie)
+ * Made by github.com/minuut 
  */
 class ImageToAscii
 {
